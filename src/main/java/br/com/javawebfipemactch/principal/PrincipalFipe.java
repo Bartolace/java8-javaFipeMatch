@@ -91,14 +91,6 @@ public class PrincipalFipe {
         return conversor.converterLista(json, new TypeReference<ArrayList<DadosMarca>>() {});
     }
 
-    private boolean validarIOTipoVeiculo(String tipo) {
-        List<String> tiposValidos = List.of("carros", "motos", "caminhoes");
-        if (!tiposValidos.contains(tipo)) {
-            return false;
-        }
-        return true;
-    }
-
     private ArrayList<DadosAvaliacao> buscaAvaliacoes(ArrayList<DadosAnoModelo> dadosAnoModelos, String tipoVeiculo, String codigoMarca, String codigoModelo) {
         ArrayList<DadosAvaliacao> avaliacoes = new ArrayList<>();
         for (DadosAnoModelo dadoAnoModelo: dadosAnoModelos){
@@ -135,13 +127,6 @@ public class PrincipalFipe {
         ArrayList<DadosAnoModelo> dadosAnoModelos = conversor.converterLista(json, new TypeReference<ArrayList<DadosAnoModelo>>() {});
         return dadosAnoModelos;
     }
-
-//    private void fipeException(<T> T dados, String mensagemErro){
-//        if (marcas.isEmpty()) {
-//            System.out.println("Nenhuma marca encontrada para o tipo de veículo informado.");
-//            return;
-//        }
-//    }
 }
 
 
