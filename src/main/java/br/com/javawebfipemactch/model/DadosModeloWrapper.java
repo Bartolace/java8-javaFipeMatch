@@ -6,5 +6,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DadosModeloWrapper(@JsonAlias("modelos") List<DadosFipe> modelos) {
+public record DadosModeloWrapper(List<DadosFipe> modelos) {
 }
