@@ -18,8 +18,5 @@ public class JavawebscreenmatchApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Principal principal = new Principal();
 		principal.exibeMenu();
-
-//		ExerciciosStreams02 exe = new ExerciciosStreams02();
-//		exe.mYexeComProdutosAfterResolucao();
 	}
 }
