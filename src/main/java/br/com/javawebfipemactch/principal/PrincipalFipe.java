@@ -3,7 +3,9 @@ package br.com.javawebfipemactch.principal;
 import br.com.javawebfipemactch.model.*;
 import br.com.javawebfipemactch.service.ConsumoApiFipe;
 import br.com.javawebfipemactch.service.ConverteDadosFipe;
+import br.com.javawebfipemactch.validacoes.ValidarDados;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,10 +13,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PrincipalFipe {
+    private ValidarDados validarDados = new ValidarDados();
     private Scanner leitura = new Scanner(System.in);
     private ConsumoApiFipe consumo = new ConsumoApiFipe();
     private ConverteDadosFipe conversor = new ConverteDadosFipe();
-
     private static final String ENDERECO = "https://parallelum.com.br/fipe/api/v1/";
     private static final String MARCAS = "/marcas";
     private static final String MODELOS = "/modelos";
@@ -27,10 +29,7 @@ public class PrincipalFipe {
         String tipoVeiculo = leitura.nextLine().toLowerCase();
 
         ArrayList<DadosMarca> marcas = buscaMarcas(tipoVeiculo);
-        if (marcas.isEmpty()) {
-            System.out.println("Nenhuma marca encontrada para o tipo de veículo informado.");
-            return;
-        }
+        validarDados.validar(marcas, "Nenhuma marca encontrada para o tipo de veículo informado.");
 
         System.out.println("===================== Marcas =====================");
         marcas.stream()
@@ -41,10 +40,7 @@ public class PrincipalFipe {
         String codigoMarca = leitura.nextLine();
 
         List<DadosModelo> modelos = buscaModelos(tipoVeiculo, codigoMarca);
-        if (modelos.isEmpty()) {
-            System.out.println("Nenhum modelo encontrado com o código informado.");
-            return;
-        }
+        validarDados.validar(modelos, "Nenhum modelo encontrado para o código de marca informada.");
 
         System.out.println("===================== Modelos =====================");
         modelos.stream()
@@ -60,19 +56,13 @@ public class PrincipalFipe {
                 .toList();
 
         System.out.println("==================== Modelos Filtrados ====================");
-        if (modelosFiltrados.isEmpty()) {
-            System.out.println("Nenhum modelo encontrado com o nome informado.");
-            return;
-        }
+        validarDados.validar(modelosFiltrados, "Nenhum modelo encontrado com o nome informado.");
         modelosFiltrados.forEach(System.out::println);
 
         System.out.println("Digite o código do modelo que deseja consultar: ");
         String codigoModelo = leitura.nextLine();
         ArrayList<DadosAnoModelo> dadosAnoModelos = buscaAnosModelos(tipoVeiculo, codigoMarca, codigoModelo);
-        if (dadosAnoModelos.isEmpty()) {
-            System.out.println("Nenhum ano modelo encontrado com o código informado.");
-            return;
-        }
+        validarDados.validar(dadosAnoModelos, "Nenhum ano modelo encontrado com o código informado.");
 
         System.out.println("==================== Avaliações ====================");
         buscaAvaliacoes(dadosAnoModelos, tipoVeiculo, codigoMarca, codigoModelo)
@@ -83,13 +73,13 @@ public class PrincipalFipe {
                 )));
     }
 
-    private ArrayList<DadosMarca> buscaMarcas(String tipoVeiculo){
+    private ArrayList<DadosMarca> buscaMarcas(String tipoVeiculo) {
         String json = consumo.obterDadosFipe(ENDERECO + tipoVeiculo + MARCAS);
-        if(json.contains("error")) {
-            return new ArrayList<>();
-        }
+        if (json.contains("error")) return new ArrayList<>();
+
         return conversor.converterLista(json, new TypeReference<ArrayList<DadosMarca>>() {});
     }
+
 
     private ArrayList<DadosAvaliacao> buscaAvaliacoes(ArrayList<DadosAnoModelo> dadosAnoModelos, String tipoVeiculo, String codigoMarca, String codigoModelo) {
         ArrayList<DadosAvaliacao> avaliacoes = new ArrayList<>();
