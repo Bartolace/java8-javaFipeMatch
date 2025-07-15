@@ -4,7 +4,6 @@ import br.com.javawebfipemactch.model.*;
 import br.com.javawebfipemactch.service.ConsumoApiFipe;
 import br.com.javawebfipemactch.service.ConverteDadosFipe;
 import br.com.javawebfipemactch.validacoes.ValidarDados;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,9 +30,8 @@ public class PrincipalFipe {
         """);
 
         String tipoVeiculo = selecionaTipoVeiculo();
-        ArrayList<DadosMarca> marcas = buscaMarcas(tipoVeiculo);
+        List<DadosFipe> marcas = buscaMarcas(tipoVeiculo);
         validarDados.validar(marcas, "Nenhuma marca encontrada para o tipo de veículo informado.");
-
 
         System.out.println("===================== Marcas =====================");
         marcas.stream()
@@ -45,7 +43,7 @@ public class PrincipalFipe {
         """);
         String codigoMarca = "/"+ leitura.nextLine() + "/modelos";
 
-        List<DadosModelo> modelos = buscaModelos(tipoVeiculo, codigoMarca);
+        List<DadosFipe> modelos = buscaModelos(tipoVeiculo, codigoMarca);
         validarDados.validar(modelos, "Nenhum modelo encontrado para o código de marca informada.");
 
 
@@ -59,9 +57,9 @@ public class PrincipalFipe {
         """);
         String modeloEscolhido = leitura.nextLine().toLowerCase().replaceAll(" ", "");
 
-        List<DadosModelo> modelosFiltrados = modelos.stream()
+        List<DadosFipe> modelosFiltrados = modelos.stream()
                 .filter(m -> m.nome().toLowerCase().replaceAll(" ","").contains(modeloEscolhido))
-                .sorted(Comparator.comparing(DadosModelo::nome))
+                .sorted(Comparator.comparing(DadosFipe::nome))
                 .toList();
 
 
@@ -74,7 +72,7 @@ public class PrincipalFipe {
         """);
         String codigoModelo = "/" + leitura.nextLine() + "/anos";
 
-        ArrayList<DadosAnoModelo> dadosAnoModelos = buscaAnosModelos(tipoVeiculo, codigoMarca, codigoModelo);
+        List<DadosFipe> dadosAnoModelos = buscaAnosModelos(tipoVeiculo, codigoMarca, codigoModelo);
         validarDados.validar(dadosAnoModelos, "Nenhum ano modelo encontrado com o código informado.");
 
 
@@ -102,35 +100,35 @@ public class PrincipalFipe {
         }
     }
 
-    private ArrayList<DadosMarca> buscaMarcas(String tipoVeiculo) {
+    private List<DadosFipe> buscaMarcas(String tipoVeiculo) {
         String json = consumo.obterDadosFipe(URL_BASE + tipoVeiculo);
-        if (json.contains("error")) return new ArrayList<>();
+        if (json.contains("error")) return List.of();
 
-        return conversor.converterLista(json, new TypeReference<ArrayList<DadosMarca>>() {});
+        return conversor.converterLista(json, DadosFipe.class);
     }
 
-    private List<DadosModelo> buscaModelos(String tipoVeiculo, String codigoMarca){
+    private List<DadosFipe> buscaModelos(String tipoVeiculo, String codigoMarca){
         var json = consumo.obterDadosFipe(URL_BASE + tipoVeiculo + codigoMarca);
         if(json.contains("error")) {
             return List.of();
         }
 
         DadosModeloWrapper modeloWrapper = conversor.converter(json, DadosModeloWrapper.class);
-        List<DadosModelo> modelos = modeloWrapper.modelos();
+        List<DadosFipe> modelos = modeloWrapper.modelos();
         return modelos;
     }
 
-    private ArrayList<DadosAnoModelo> buscaAnosModelos(String tipoVeiculo, String codigoMarca, String codigoModelo){
+    private List<DadosFipe> buscaAnosModelos(String tipoVeiculo, String codigoMarca, String codigoModelo){
         var json = consumo.obterDadosFipe(URL_BASE + tipoVeiculo + codigoMarca + codigoModelo);
-        if(json.contains("error")) return new ArrayList<>();
+        if(json.contains("error")) return List.of();
 
-        ArrayList<DadosAnoModelo> dadosAnoModelos = conversor.converterLista(json, new TypeReference<ArrayList<DadosAnoModelo>>() {});
+        List<DadosFipe> dadosAnoModelos = conversor.converterLista(json, DadosFipe.class);
         return dadosAnoModelos;
     }
 
-    private ArrayList<DadosAvaliacao> buscaAvaliacoes(ArrayList<DadosAnoModelo> dadosAnoModelos, String tipoVeiculo, String codigoMarca, String codigoModelo) {
-        ArrayList<DadosAvaliacao> avaliacoes = new ArrayList<>();
-        for (DadosAnoModelo dadoAnoModelo: dadosAnoModelos){
+    private List<DadosAvaliacao> buscaAvaliacoes(List<DadosFipe> dadosAnoModelos, String tipoVeiculo, String codigoMarca, String codigoModelo) {
+        List<DadosAvaliacao> avaliacoes = new ArrayList<>();
+        for (DadosFipe dadoAnoModelo: dadosAnoModelos){
             var json = consumo.obterDadosFipe(URL_BASE + tipoVeiculo + codigoMarca + codigoModelo + "/" + dadoAnoModelo.codigo());
 
             DadosAvaliacao avaliacao = conversor.converter(json, DadosAvaliacao.class);
