@@ -1,4 +1,4 @@
-package br.com.javawebfipemactch.validacoes;
+package br.com.javawebfipematch.validacoes;
 
 import java.util.List;
 

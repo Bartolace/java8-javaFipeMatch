@@ -1,4 +1,4 @@
-package br.com.javawebfipemactch.model;
+package br.com.javawebfipematch.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

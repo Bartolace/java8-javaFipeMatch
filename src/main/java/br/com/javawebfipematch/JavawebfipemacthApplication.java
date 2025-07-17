@@ -1,6 +1,6 @@
-package br.com.javawebfipemactch;
+package br.com.javawebfipematch;
 
-import br.com.javawebfipemactch.principal.PrincipalFipe;
+import br.com.javawebfipematch.principal.PrincipalFipe;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,6 @@
-package br.com.javawebfipemactch.validacoes;
+package br.com.javawebfipematch.validacoes;
 
-import br.com.javawebfipemactch.exception.semDadosException;
+import br.com.javawebfipematch.exception.semDadosException;
 
 import java.util.List;
 

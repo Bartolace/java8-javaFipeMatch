@@ -1,7 +1,5 @@
-package br.com.javawebfipemactch.service;
+package br.com.javawebfipematch.service;
 
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 

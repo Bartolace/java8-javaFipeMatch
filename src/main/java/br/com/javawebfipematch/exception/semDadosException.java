@@ -1,4 +1,4 @@
-package br.com.javawebfipemactch.exception;
+package br.com.javawebfipematch.exception;
 
 public class semDadosException extends RuntimeException{
 

@@ -1,4 +1,4 @@
-package br.com.javawebfipemactch.service;
+package br.com.javawebfipematch.service;
 
 import java.io.IOException;
 import java.net.URI;
